@@ -1,0 +1,94 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<style>
+    /* Profile container styling */
+    .profile-container {
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    /* Profile heading */
+    .profile-container h1 {
+        color: #004d40;
+        margin-bottom: 20px;
+    }
+
+    /* Profile image styling */
+    .profile-image {
+        margin-bottom: 20px;
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .profile-image img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    /* Profile details styling */
+    .profile-details p {
+        font-size: 18px;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    /* Button styling */
+    .edit-profile-link,
+    .back-to-orders-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: #004d40;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-profile-link:hover,
+    .back-to-orders-btn:hover {
+        background-color: #00332c;
+    }
+
+    /* Ensure buttons have spacing */
+    .back-to-orders-btn {
+        margin-left: 10px;
+    }
+</style>
+
+
+<div class="profile-container">
+    <h1>Welcome, {{ user.username }}</h1>
+
+    <!-- Display Profile Picture -->
+    <div class="profile-image">
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Image">
+        {% else %}
+            <p>No profile picture</p>
+        {% endif %}
+    </div>
+
+    <div class="profile-details">
+        <p>Email: {{ user.email }}</p>
+        <p>Phone Number: {{ user.phone_number }}</p>
+        <p>Location: {{ user.location }}</p>
+    </div>
+
+    <!-- Link to Edit Profile -->
+    <a href="{% url 'edit_profile' %}" class="edit-profile-link">Edit Profile</a>
+    <a href="{% url 'orders:order_history' %}" class="back-to-orders-btn">View Order History</a>
+    
+</div>
+
+{% endblock %}

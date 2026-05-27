@@ -1,0 +1,620 @@
+{% block content %}
+    <style>
+       .checkout-container {
+    width: 90%;
+    max-width: 500px; /* Prevents it from becoming too wide on larger screens */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Ensures spacing between sections */
+}
+
+h2, h3 {
+    color: #004d40;
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin: 10px 0 5px;
+}
+
+select, input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #004d40;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #00332d;
+}
+
+.modal {
+    display: none; /* Hide by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.show {
+    display: flex; /* Show modal when .show is added */
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #004d40;
+    color: white;
+}
+
+.total-price {
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.payment-option {
+    display: none;
+    margin-top: 10px;
+}
+
+.place-order-btn {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .checkout-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 8px 12px;
+    }
+
+    .place-order-btn {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .modal-content {
+        width: 100%;
+        padding: 10px;
+    }
+
+    h2, h3 {
+        font-size: 18px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .place-order-btn {
+        font-size: 14px;
+    }
+}
+
+    </style>
+
+    <div class="wrapper checkout-page">
+    <div class="checkout-container">
+        <h2>Checkout</h2>
+        <form id="checkout-form" method="post" action="{% url 'orders:checkout' %}" onsubmit="console.logFormData(event)">
+
+            {% csrf_token %}
+
+            <!-- Shipping Address -->
+            <h3>Shipping Address</h3>
+            <div class="form-group">
+                <label for="saved_addresses">Select Saved Address:</label>
+                <select id="saved_addresses" name="shipping_address" required>
+                    <option value="" selected disabled>-- Select an Address --</option>
+                    {% for address in saved_addresses %}
+                        <option value="{{ address.id }}">{{ address.street_address }}, {{ address.city }}, {{ address.country }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" id="add-new-address-btn">Add New Address</button>
+            </div>
+            
+           <!-- Address Modal -->
+           <div id="new-address-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">×</span>
+                <h3>Add New Address</h3>
+        
+                <!-- ✅ Ensure the form is inside -->
+                <form id="new-address-form">
+
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="street_address">Street Address:</label>
+                        <input type="text" id="street_address" name="street_address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State:</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code:</label>
+                        <input type="text" id="postal_code" name="postal_code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <input type="text" id="country" name="country" required>
+                    </div>
+                    <button type="submit" id="save-address">Save Address</button>
+                </form>  <!-- ✅ This form must exist! -->
+            </div>
+        </div>
+        
+        
+        
+
+            
+
+            <!-- Shipping Method -->
+            <div class="form-group">
+                <label for="shipping_method">Shipping Method:</label>
+                <select id="shipping_method" name="shipping_method" required>
+                    <option value="" selected disabled>-- Select Shipping Method --</option>
+                    <option value="Standard">Standard (3-5 days)</option>
+                    <option value="Express">Express (1-2 days)</option>
+                </select>
+            </div>
+
+            <!-- Order Summary -->
+            <h3>Your Cart</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="50">
+                            {{ item.product.name }}
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td>Ksh{{ item.product.price }}</td>
+                        <td>Ksh{{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="total-price"><strong>Total Price: Ksh{{ total_price }}</strong></p>
+
+            <!-- Payment Method -->
+            <div class="form-group">
+                <label for="payment_method">Payment Method:</label>
+                <select id="payment_method" name="payment_method" required>
+                    <option value="" selected disabled>-- Select Payment Method --</option>
+                    <option value="Pay Now">Pay Now</option>
+                    <option value="Pay on Delivery">Pay on Delivery</option>
+                </select>
+            </div>
+
+            <!-- Payment Modal -->
+            <div id="payment-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Select Payment Provider</h3>
+                    <div class="form-group">
+                        <label for="payment_provider">Payment Provider:</label>
+                        <select id="payment_provider" name="payment_provider" required>
+                            <option value="" disabled selected>Select Payment Provider</option>
+                            <option value="Mpesa">Mpesa</option>
+                            <option value="PayPal">PayPal</option>
+                        </select>
+                    </div>
+                    <div id="mpesa-payment" class="payment-option">
+                        <label for="mpesa-number">Mpesa Number:</label>
+                        <input type="text" id="mpesa-number" name="mpesa_number">
+                        <button type="button" id="confirm-mpesa-payment">Confirm Mpesa Payment</button>
+                    </div>
+                    <div id="paypal-payment" class="payment-option">
+                        <label for="paypal-email">PayPal Email:</label>
+                        <input type="email" id="paypal-email" name="paypal_email">
+                        <button type="button" id="confirm-paypal-payment">Confirm PayPal Payment</button>
+                    </div>
+                </div>
+            </div>
+
+       
+            <!-- Place Order Button -->
+            <button id="place-order-btn" type="submit">Place Order</button>
+
+        </form>
+    </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("JavaScript loaded successfully! ✅");
+
+    const checkoutForm = document.getElementById("checkout-form");
+    const placeOrderBtn = document.getElementById("place-order-btn");
+
+    if (!checkoutForm) {
+        console.error("❌ ERROR: Checkout form not found in DOM!");
+        return;
+    }
+
+    console.log("✅ Checkout form found!");
+
+    function validateForm() {
+        console.log("🔍 Running validation...");
+
+        const shippingAddressSelect = document.getElementById("saved_addresses");
+        const shippingMethodSelect = document.getElementById("shipping_method");
+        const paymentMethodSelect = document.getElementById("payment_method");
+
+        if (!shippingAddressSelect || !shippingMethodSelect || !paymentMethodSelect) {
+            console.error("❌ ERROR: One or more required form elements are missing!");
+            return false;
+        }
+
+        const shippingAddress = shippingAddressSelect.value.trim();
+        const shippingMethod = shippingMethodSelect.value.trim();
+        const paymentMethod = paymentMethodSelect.value.trim();
+
+        console.log("📌 Retrieved Shipping Address Value:", `"${shippingAddress}"`);
+        console.log("📌 Retrieved Shipping Method Value:", `"${shippingMethod}"`);
+        console.log("📌 Retrieved Payment Method Value:", `"${paymentMethod}"`);
+
+        if (!shippingAddress) {
+            alert("🚨 Please select a shipping address.");
+            return false;
+        }
+
+        if (!shippingMethod) {
+            alert("🚨 Please select a shipping method.");
+            return false;
+        }
+
+        if (!paymentMethod) {
+            alert("🚨 Please select a payment method.");
+            return false;
+        }
+
+        console.log("✅ Form validation successful!");
+        return true;
+    }
+
+    if (!placeOrderBtn) {
+        console.error("❌ ERROR: 'Place Order' button not found!");
+        return;
+    }
+
+    console.log("✅ 'Place Order' button found!");
+
+    placeOrderBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        console.log("🛒 'Place Order' button clicked!");
+
+        if (validateForm()) {
+            console.log("✅ Form is valid. Submitting...");
+
+            const formData = new FormData();
+
+            // Manually add fields
+            formData.append("csrfmiddlewaretoken", checkoutForm.querySelector("[name=csrfmiddlewaretoken]").value);
+            formData.append("shipping_address", document.getElementById("saved_addresses").value.trim());
+            formData.append("shipping_method", document.getElementById("shipping_method").value.trim());
+            formData.append("payment_method", document.getElementById("payment_method").value.trim());
+
+            console.log("📊 Checking FormData before submission...");
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
+
+            fetch("/orders/checkout/", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("✅ Order placed successfully! Redirecting...");
+                    window.location.href = data.redirect_url;
+                } else {
+                    console.error("❌ Checkout error:", data.message);
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error("❌ AJAX error:", error));
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // ✅ MODAL FUNCTIONALITY
+    const addAddressBtn = document.getElementById("add-new-address-btn"); // Button for adding new address
+    const paymentMethodSelect = document.getElementById("payment_method"); // Payment method dropdown
+    const addressModal = document.getElementById("new-address-modal"); // Address modal
+    const paymentModal = document.getElementById("payment-modal"); // Payment modal
+    const closeButtons = document.querySelectorAll(".close-modal"); // Close buttons
+
+    console.log("🔍 Checking Elements...");
+    console.log("📌 addAddressBtn:", addAddressBtn);
+    console.log("📌 addressModal:", addressModal);
+    console.log("📌 paymentMethodSelect:", paymentMethodSelect);
+    console.log("📌 paymentModal:", paymentModal);
+
+    // 🔹 Open Address Modal
+    if (addAddressBtn && addressModal) {
+        addAddressBtn.addEventListener("click", function () {
+            console.log("📌 'Add New Address' button clicked!");
+            addressModal.style.display = "block";  // Ensure display is set correctly
+            addressModal.style.opacity = "1";  // Ensure opacity is fully visible
+            addressModal.style.visibility = "visible"; // Ensure it's visible
+        });
+    } else {
+        console.error("❌ ERROR: 'Add New Address' button or modal not found!");
+    }
+
+    // 🔹 Open Payment Modal when 'Pay Now' is selected
+    if (paymentMethodSelect && paymentModal) {
+        paymentMethodSelect.addEventListener("change", function () {
+            if (this.value === "Pay Now") {
+                console.log("📌 'Pay Now' selected, opening payment modal...");
+                paymentModal.style.display = "block";
+                paymentModal.style.opacity = "1";
+                paymentModal.style.visibility = "visible";
+            }
+        });
+    } else {
+        console.error("❌ ERROR: 'Payment Method' dropdown or modal not found!");
+    }
+
+    // 🔹 Close Modals when clicking 'X' button
+    closeButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const modal = this.closest(".modal");
+            if (modal) {
+                modal.style.display = "none";
+                console.log(`✅ Modal closed: ${modal.id}`);
+            }
+        });
+    });
+
+    // 🔹 Close modal when clicking outside of it
+    window.addEventListener("click", function (event) {
+        if (event.target.classList.contains("modal")) {
+            event.target.style.display = "none";
+            console.log(`✅ Modal closed (outside click): ${event.target.id}`);
+        }
+    });
+
+     // Select elements
+     const saveAddressBtn = document.getElementById("save-address");
+    const addressForm = document.getElementById("address-form");
+    const savedAddressesDropdown = document.getElementById("saved_addresses");
+    
+
+    // ✅ Ensure elements exist
+    if (!saveAddressBtn) {
+        console.error("❌ ERROR: 'Save Address' button not found!");
+        return;
+    }
+    if (!addressForm) {
+        console.error("❌ ERROR: Address form not found!");
+        return;
+    }
+    if (!savedAddressesDropdown) {
+        console.error("❌ ERROR: Saved addresses dropdown not found!");
+        return;
+    }
+
+    console.log("✅ All required elements found!");
+
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // ✅ Save Address Button Click Event
+    saveAddressBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        console.log("📌 'Save Address' button clicked!");
+
+        // Create FormData object
+        const formData = new FormData(addressForm);
+
+        // Append CSRF token
+        const csrfToken = getCookie("csrftoken");
+        if (!csrfToken) {
+            console.error("❌ ERROR: CSRF token not found!");
+            alert("Security error: CSRF token missing.");
+            return;
+        }
+        formData.append("csrfmiddlewaretoken", csrfToken);
+
+        // ✅ Log FormData values
+        console.log("📊 FormData before submission:");
+        for (let pair of formData.entries()) {
+            console.log(`${pair[0]}: ${pair[1]}`);
+        }
+
+        // Send AJAX request to backend
+        fetch("/orders/save-address/", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("📩 Server Response:", data);
+
+            if (data.success) {
+                console.log("✅ Address saved successfully!");
+
+                // Close modal
+                addressModal.style.display = "none";
+
+                // Add new address to dropdown
+                const newOption = document.createElement("option");
+                newOption.value = data.address_id;
+                newOption.textContent = data.full_address;
+                savedAddressesDropdown.appendChild(newOption);
+
+                alert("✅ Address saved successfully!");
+            } else {
+                console.error("❌ Address saving failed:", data.message);
+                alert("❌ Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("❌ AJAX error:", error);
+            alert("❌ Failed to save address. Please try again.");
+        });
+    });
+});
+
+   
+    
+    
+    
+
+
+
+
+</script>
+    
+    
+    
+{% endblock %}
+
+

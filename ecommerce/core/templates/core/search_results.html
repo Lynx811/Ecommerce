@@ -1,0 +1,111 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+    /* Style for the search form */
+    form {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    form input[type="text"] {
+        padding: 8px;
+        font-size: 16px;
+        width: 250px;
+        margin-right: 10px;
+    }
+    form button {
+        padding: 8px 12px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+    }
+    form button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style for the search results header */
+    h2 {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    /* Style for the product list */
+    .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+
+    /* Style for each product button (product item container) */
+    .product-button {
+        margin: 10px;
+        transition: transform 0.3s ease;
+    }
+    .product-button:hover {
+        transform: scale(1.05);
+    }
+
+    /* Style for each product card */
+    .product-card {
+        width: 200px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .product-card img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+    .product-card h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .product-card p {
+        font-size: 16px;
+        color: #28a745;
+    }
+
+    /* Style for no products found message */
+    .no-products {
+        text-align: center;
+        font-size: 18px;
+        color: #dc3545;
+        margin-top: 20px;
+    }
+</style>
+
+<form action="{% url 'search_results' %}" method="GET">
+    <input type="text" name="q" placeholder="Search for products..." value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+<h2>Search results for "{{ query }}"</h2>
+
+{% if products %}
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-button">
+                <a href="{% url 'products:product_detail' product.id %}">
+                    <div class="product-card">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                        <h3>{{ product.name }}</h3>
+                        <p>Price: Ksh{{ product.price }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="no-products">No products found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Home - E-Shop{% endblock %}
+
+{% block content %}  
+    <div class="homepage-content">
+        <!-- Main Banner -->
+        <section class="main-banner">
+            <img src="{% static 'core/images/homepagebanner.jpg' %}" alt="Main Banner">
+            <div class="banner-content">
+                <h1>Big Discounts Just for You!</h1>
+                <p>Shop now and save big on top products!</p>
+                <a href="{% url 'products:product_list' %}" class="cta-button">Shop Now</a>
+            </div>
+        </section>
+
+        <!-- Search Bar -->
+        <form action="{% url 'search_results' %}" method="GET">
+            <input type="text" name="q" placeholder="Search for products..." value="{{ query }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Categories -->
+        <section class="categories">
+            <h2>Shop by Categories</h2>
+            <div class="category-items">
+                {% for category in categories %}
+                    <div class="category-item">
+                        <a href="{% url 'category_list' category.id %}">
+                            <img src="{% if category.image %}{{ category.image.url }}{% else %}{% static 'core/images/default-category.jpg' %}{% endif %}" 
+                                 alt="{{ category.name }}" />
+                            <p>{{ category.name }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

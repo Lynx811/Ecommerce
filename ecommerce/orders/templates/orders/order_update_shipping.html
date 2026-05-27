@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="update-shipping-container">
+    <h2>Update Shipping Status for Order #{{ order.id }}</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="shipping_status">Shipping Status</label>
+            <select name="shipping_status" id="shipping_status">
+                <option value="processing" {% if order.shipping_status == 'processing' %}selected{% endif %}>Processing</option>
+                <option value="shipped" {% if order.shipping_status == 'shipped' %}selected{% endif %}>Shipped</option>
+                <option value="delivered" {% if order.shipping_status == 'delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="update-status-btn">Update Status</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Update Shipping Container */
+.update-shipping-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: bold;
+    display: block;
+    color: #34495e;
+}
+
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+/* Update Status Button */
+.update-status-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+}
+
+.update-status-btn:hover {
+    background-color: #2980b9;
+}
+</style>
+{% endblock %}

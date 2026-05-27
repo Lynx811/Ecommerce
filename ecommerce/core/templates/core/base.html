@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}E-Shop{% endblock %}</title>
+    
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+    
+    <!-- Allow Each Page to Add Extra Styles -->
+    {% block extra_head %}{% endblock %}
+    {% block styles %}{% endblock %}
+</head>
+<body>
+
+    <!-- ☰ Toggle Button (Always Visible) -->
+    <button class="menu-toggle">☰</button>
+
+    <!-- Sidebar (Vertical Header) -->
+    <header class="vertical-header">
+        <h1><a href="/" class="site-title">E-Shop</a></h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="{% url 'products:product_list' %}">Products</a>
+            <a href="{% url 'cart:cart' %}">Cart 
+                {% if cart_item_count > 0 %}
+                    ({{ cart_item_count }})
+                {% else %}
+                    (Empty)
+                {% endif %}
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">Hello, {{ user.username }}</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- Wrapper for content -->
+    {% block wrapper %}
+    <div class="wrapper">
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% endblock %}
+
+    <!-- Footer (Only on Homepage) -->
+    {% if request.path == '/' %}
+    <footer class="footer">
+        <div class="footer-links">
+            <ul>
+                <li><a href="/about/">About Us</a></li>
+                <li><a href="/contact/">Contact</a></li>
+                <li><a href="/terms/">Terms & Conditions</a></li>
+                <li><a href="/privacy/">Privacy Policy</a></li>
+            </ul>
+        </div>
+        <p>&copy; 2025 E-Shop. All rights reserved.</p>
+    </footer>
+    {% endif %}
+
+    <!-- JavaScript for Sidebar Toggle -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.querySelector(".vertical-header");
+    const toggleBtn = document.querySelector(".menu-toggle");
+
+    toggleBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("active");
+    });
+});
+
+    </script>
+
+</body>
+</html>

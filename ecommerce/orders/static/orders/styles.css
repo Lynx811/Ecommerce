@@ -1,0 +1,156 @@
+/* order_confirmation.css */
+
+/* General styles */
+.order-confirmation-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+.confirmation-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+}
+
+.thank-you-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #444;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #555;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+.order-info, .shipping-info {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.order-info-value, .shipping-info-value {
+    font-weight: bold;
+    color: #555;
+}
+
+.order-items-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.order-items-table th, .order-items-table td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.order-items-table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.order-items-table td {
+    font-size: 1rem;
+    color: #555;
+}
+
+.order-total {
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #444;
+    margin-top: 10px;
+}
+
+.notification-message {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #555;
+    margin-top: 20px;
+}
+
+.back-to-orders-btn {
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.back-to-orders-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Status colors */
+.status {
+    font-weight: bold;
+}
+
+.status.shipped {
+    color: green;
+}
+
+.status.pending {
+    color: orange;
+}
+
+.status.cancelled {
+    color: red;
+}
+
+.status.default-status {
+    color: gray;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .order-confirmation-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .confirmation-title {
+        font-size: 1.6rem;
+    }
+
+    .thank-you-message, .notification-message {
+        font-size: 1rem;
+    }
+
+    .order-info, .shipping-info {
+        padding: 10px;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .order-items-table td {
+        font-size: 0.9rem;
+    }
+
+    .order-total {
+        font-size: 1rem;
+    }
+}
+
+/* Ensure checkout page aligns correctly */
+.checkout-wrapper {
+    margin-left: 250px; /* Same width as the sidebar */
+    padding: 20px;
+}

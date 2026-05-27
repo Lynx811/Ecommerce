@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+    <h2>All Products</h2>
+
+    <style>
+        /* Container for the product list */
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Flexibly adapts to screen size */
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        /* Styling for each product card */
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover effect on product cards */
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Image within the product card */
+        .product-card img {
+            width: 100%;
+            height: auto;
+            object-fit: cover; /* Ensures the image covers the area without stretching */
+        }
+
+        /* Product name and price */
+        .product-card h3 {
+            font-size: 1.2em;
+            margin: 10px;
+            color: #333;
+            text-align: center;
+        }
+
+        .product-card p {
+            font-size: 1em;
+            margin: 10px;
+            text-align: center;
+            color: #888;
+        }
+
+        /* Styling for when there are no products */
+        .product-list p {
+            text-align: center;
+            font-size: 1.2em;
+            color: #999;
+        }
+
+        /* Link styling for each product */
+        .product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Add some spacing around the entire content */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+    </style>
+
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'products:product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                    <h3>{{ product.name }}</h3>
+                    <p>Price: Ksh{{ product.price }}</p>
+                </a>
+            </div>
+        {% empty %}
+            <p>No products available.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

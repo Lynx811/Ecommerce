@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="order-detail-container">
+    <h2>Order Details - Order #{{ order.id }}</h2>
+    
+    <div class="order-status">
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+        <p><strong>Estimated Delivery Date:</strong> {{ order.estimated_delivery_date }}</p>
+    </div>
+    
+    <div class="shipping-info">
+        <h3>Shipping Information</h3>
+        <p><strong>Address:</strong> {{ order.shipping_address }}</p>
+        <p><strong>Method:</strong> {{ order.shipping_method }}</p>
+        <p><strong>Shipping Status:</strong> {{ order.shipping_status }}</p>
+    </div>
+    
+    <div class="order-items">
+        <h3>Items in Your Order</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Ksh{{ item.price_at_purchase }}</td>
+                    <td>Ksh{{ item.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p><strong>Total Price: Ksh{{ order.total_price }}</strong></p>
+    </div>
+    
+    <p>You will receive a notification once your order is shipped and on its way.</p>
+    <a href="{% url 'orders:order_history' %}" class="back-to-history-btn">Back to Order History</a>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Order Detail Container */
+.order-detail-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Order Status Section */
+.order-status p {
+    font-size: 1rem;
+    margin: 8px 0;
+    color: #34495e;
+}
+
+.order-status strong {
+    font-weight: bold;
+}
+
+/* Shipping Information */
+.shipping-info h3 {
+    font-size: 1.5rem;
+    color: #2980b9;
+    margin-bottom: 15px;
+}
+
+.shipping-info p {
+    font-size: 1rem;
+    color: #34495e;
+}
+
+.shipping-info strong {
+    font-weight: bold;
+}
+
+/* Order Items Table */
+.order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.order-items th,
+.order-items td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ecf0f1;
+}
+
+.order-items th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.order-items td {
+    background-color: #f2f2f2;
+}
+
+.order-items p {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Back to History Button */
+.back-to-history-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-to-history-btn:hover {
+    background-color: #2980b9;
+}
+
+</style>
+{% endblock %}

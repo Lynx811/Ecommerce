@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2 class="category-title">Products in {{ category.name }}</h2>
+
+    <div class="product-items">
+        {% for product in products %}
+            <div class="product-item">
+                <a href="{% url 'product_detail' product.id %}" class="product-link">
+                    <div class="product-image-container">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-description">{{ product.description|truncatewords:15 }}</p>
+                        <p class="product-price">Ksh{{ product.price }}</p>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block styles %}
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Category Title */
+.category-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2980b9;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+/* Product Items Container */
+.product-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+    margin-bottom: 40px;
+}
+
+/* Product Item */
+.product-item {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effect for Product Item */
+.product-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Product Link */
+.product-link {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Product Image */
+.product-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effect for Product Image */
+.product-item:hover .product-image {
+    transform: scale(1.1);
+}
+
+/* Product Info */
+.product-info {
+    padding: 15px;
+}
+
+/* Product Name */
+.product-name {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Product Description */
+.product-description {
+    font-size: 1rem;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* Product Price */
+.product-price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin-top: 10px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .category-title {
+        font-size: 1.8rem;
+    }
+    
+    .product-items {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+        gap: 15px;
+    }
+
+    .product-item {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-info {
+        padding: 10px;
+    }
+
+    .product-name {
+        font-size: 1.2rem;
+    }
+
+    .product-description {
+        font-size: 0.9rem;
+    }
+
+    .product-price {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .category-title {
+        font-size: 1.6rem;
+    }
+
+    .product-items {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        padding: 0 10px;
+    }
+
+    .product-image-container {
+        height: 150px;
+    }
+
+    .product-name {
+        font-size: 1rem;
+    }
+
+    .product-description {
+        font-size: 0.8rem;
+    }
+
+    .product-price {
+        font-size: 0.9rem;
+    }
+}
+
+</style>
+{% endblock %}

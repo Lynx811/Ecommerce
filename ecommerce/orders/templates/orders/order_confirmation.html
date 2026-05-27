@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+<div class="order-confirmation-container">
+    <h2 class="confirmation-title">Order Confirmation</h2>
+    
+    <p class="thank-you-message">Thank you for your purchase, <strong>{{ user.username }}</strong>! Your order has been successfully placed.</p>
+
+    <div class="order-details">
+        <h3 class="section-title">Order Details</h3>
+        <div class="order-info">
+            <p><strong>Order Number:</strong> <span class="order-info-value">{{ order.id }}</span></p>
+            <p><strong>Shipping Status:</strong> 
+                <span class="order-info-value status {% if order.shipping_status == 'Shipped' %}shipped{% elif order.status == 'Pending' %}pending{% elif order.status == 'Cancelled' %}cancelled{% else %}default-status{% endif %}">
+                {{ order.shipping_status }}
+            </span>
+            </p>
+            <p><strong>Payment Status:</strong> <span class="order-info-value">{{ order.payment_status }}</span></p>
+            <p><strong>Estimated Delivery Date:</strong> <span class="order-info-value">{{ order.estimated_delivery_date }}</span></p>
+        </div>
+
+        <h4 class="section-title">Shipping Information</h4>
+        <div class="shipping-info">
+            <p><strong>Address:</strong> <span class="shipping-info-value">{{ order.shipping_address }}</span></p>
+            <p><strong>Shipping Method:</strong> <span class="shipping-info-value">{{ order.shipping_method }}</span></p>
+        </div>
+    </div>
+
+    <div class="order-items">
+        <h3 class="section-title">Items in Your Order</h3>
+        <table class="order-items-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.order_items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>Ksh{{ item.price_at_purchase }}</td>
+                    <td>Ksh{{ item.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="order-total">
+            <p><strong>Total Price: Ksh{{ order.total_price }}</strong></p>
+        </div>
+    </div>
+
+    <p class="notification-message">You will receive a notification once your order is shipped.</p>
+    <a href="{% url 'orders:order_history' %}" class="back-to-orders-btn">View Order History</a>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the order confirmation page */
+.order-confirmation-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Title and Subtitle */
+.confirmation-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.thank-you-message {
+    font-size: 1.2rem;
+    text-align: center;
+    color: #34495e;
+    margin-bottom: 30px;
+}
+
+/* Order Details */
+.order-details {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2980b9;
+    margin-bottom: 10px;
+}
+
+.order-info p,
+.shipping-info p {
+    font-size: 1rem;
+    margin: 8px 0;
+}
+
+.order-info-value,
+.shipping-info-value {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.status.pending {
+    background-color: #f39c12;
+    color: #fff;
+}
+
+.status.shipped {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.status.cancelled {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.default-status {
+    background-color: #95a5a6;
+    color: #fff;
+}
+
+/* Order Items Table */
+.order-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.order-items-table th,
+.order-items-table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ecf0f1;
+}
+
+.order-items-table th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.order-items-table td {
+    background-color: #f2f2f2;
+}
+
+.order-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 2px solid #ecf0f1;
+}
+
+.notification-message {
+    font-size: 1rem;
+    text-align: center;
+    color: #7f8c8d;
+    margin: 20px 0;
+}
+
+/* Button to View Order History */
+.back-to-orders-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.back-to-orders-btn:hover {
+    background-color: #2980b9;
+}
+</style>
+{% endblock %}

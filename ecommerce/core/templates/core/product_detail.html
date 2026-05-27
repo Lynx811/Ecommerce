@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="product-container">
+    <div class="product-image">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    </div>
+    <div class="product-details">
+        <h2 class="product-title">{{ product.name }}</h2>
+        <p class="product-description">{{ product.description }}</p>
+        <p class="product-price">Price: Ksh{{ product.price }}</p>
+        <p class="product-stock">Stock: {{ product.stock }}</p>
+        
+        <!-- Add to Cart button -->
+        <form method="post" action="{% url 'cart:add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Product Container */
+.product-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+}
+
+/* Product Image */
+.product-image {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+}
+
+/* Product Details */
+.product-details {
+    flex: 1;
+    min-width: 300px;
+    padding-left: 20px;
+}
+
+/* Product Title */
+.product-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* Product Description */
+.product-description {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+/* Product Price */
+.product-price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin-bottom: 20px;
+}
+
+/* Product Stock */
+.product-stock {
+    font-size: 1.1rem;
+    color: #2980b9;
+    margin-bottom: 30px;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    transition: background 0.3s ease-in-out;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #2980b9;
+}
+
+/* ===== ✅ RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .product-container {
+        flex-direction: column; /* Stack elements vertically */
+        text-align: center;
+        padding: 15px;
+    }
+
+    .product-image {
+        width: 100%;
+    }
+
+    .product-details {
+        padding-left: 0;
+        width: 100%;
+    }
+
+    .product-title {
+        font-size: 1.8rem;
+    }
+
+    .product-description {
+        font-size: 1rem;
+    }
+
+    .product-price {
+        font-size: 1.3rem;
+    }
+
+    .add-to-cart-btn {
+        font-size: 1rem;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-title {
+        font-size: 1.5rem;
+    }
+
+    .product-description {
+        font-size: 0.95rem;
+    }
+
+    .product-price {
+        font-size: 1.2rem;
+    }
+
+    .add-to-cart-btn {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
+
+</style>
+{% endblock %}
